@@ -123,7 +123,7 @@ int32_t qCreateQueryInfo(void* tsdb, int32_t vgId, SQueryTableMsg* pQueryMsg, qi
     STableIdInfo *id = taosArrayGet(param.pTableIdList, 0);
 
     qDebug("qmsg:%p query normal table, uid:%"PRId64", tid:%d", pQueryMsg, id->uid, id->tid);
-    if ((code = tsdbGetOneTableGroup(tsdb, id->uid, pQueryMsg->window.skey, &tableGroupInfo)) != TSDB_CODE_SUCCESS) {
+    if ((code = tsdbGetOneTableGroup(tsdb, id->uid, id->tid, pQueryMsg->window.skey, &tableGroupInfo)) != TSDB_CODE_SUCCESS) {
       goto _over;
     }
   } else if (TSDB_QUERY_HAS_TYPE(pQueryMsg->queryType, TSDB_QUERY_TYPE_MULTITABLE_QUERY|TSDB_QUERY_TYPE_STABLE_QUERY)) {
@@ -140,7 +140,7 @@ int32_t qCreateQueryInfo(void* tsdb, int32_t vgId, SQueryTableMsg* pQueryMsg, qi
       }
 
       qDebug("qmsg:%p query stable, uid:%"PRIu64", tid:%d", pQueryMsg, id->uid, id->tid);
-      code = tsdbQuerySTableByTagCond(tsdb, id->uid, pQueryMsg->window.skey, param.tagCond, pQueryMsg->tagCondLen,
+      code = tsdbQuerySTableByTagCond(tsdb, id->uid, id->tid, pQueryMsg->window.skey, param.tagCond, pQueryMsg->tagCondLen,
                                       &tableGroupInfo, param.pGroupColIndex, numOfGroupByCols);
 
       if (code != TSDB_CODE_SUCCESS) {

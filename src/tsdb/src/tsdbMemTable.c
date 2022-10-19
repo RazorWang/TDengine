@@ -1162,7 +1162,7 @@ int32_t tsdbInsertControlData(STsdbRepo* pRepo, SSubmitBlk* pBlock, SShellSubmit
   int32_t tnum;
   if (pCtlData->command & FLAG_SUPER_TABLE) {
     // super table
-    ret = tsdbQuerySTableByTagCond(pRepo, pBlock->uid, pCtlData->win.skey, pCtlData->tagCond, pCtlData->tagCondLen, &tableGroupInfo, NULL, 0);
+    ret = tsdbQuerySTableByTagCond(pRepo, pBlock->uid, pBlock->tid, pCtlData->win.skey, pCtlData->tagCond, pCtlData->tagCondLen, &tableGroupInfo, NULL, 0);
     if (ret != TSDB_CODE_SUCCESS) {
       tsdbError(":SDEL vgId:%d failed to get child tables id from stable with tag condition. uid=%" PRIu64, REPO_ID(pRepo), pBlock->uid);
       if(tableGroupInfo.pGroupList)

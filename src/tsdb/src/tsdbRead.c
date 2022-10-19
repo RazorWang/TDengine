@@ -4039,13 +4039,13 @@ SArray* createTableGroup(SArray* pTableList, STSchema* pTagSchema, SColIndex* pC
   return pTableGroup;
 }
 
-int32_t tsdbQuerySTableByTagCond(STsdbRepo* tsdb, uint64_t uid, TSKEY skey, const char* pTagCond, size_t len,
+int32_t tsdbQuerySTableByTagCond(STsdbRepo* tsdb, uint64_t uid, int32_t tid, TSKEY skey, const char* pTagCond, size_t len,
                                  STableGroupInfo* pGroupInfo, SColIndex* pColIndex, int32_t numOfCols) {
   SArray* res = NULL;
   if (tsdbRLockRepoMeta(tsdb) < 0) goto _error;
 
   STable* pTable = tsdbGetTableByUid(tsdbGetMeta(tsdb), uid);
-  if (pTable == NULL) {
+  if (pTable == NULL || TABLE_TID(pTable) != tid) {
     tsdbError("%p failed to get stable, uid:%" PRIu64, tsdb, uid);
     terrno = TSDB_CODE_TDB_INVALID_TABLE_ID;
     tsdbUnlockRepoMeta(tsdb);
@@ -4141,11 +4141,11 @@ int32_t tsdbQuerySTableByTagCond(STsdbRepo* tsdb, uint64_t uid, TSKEY skey, cons
   return terrno;
 }
 
-int32_t tsdbGetOneTableGroup(STsdbRepo* tsdb, uint64_t uid, TSKEY startKey, STableGroupInfo* pGroupInfo) {
+int32_t tsdbGetOneTableGroup(STsdbRepo* tsdb, uint64_t uid, int32_t tid, TSKEY startKey, STableGroupInfo* pGroupInfo) {
   if (tsdbRLockRepoMeta(tsdb) < 0) goto _error;
 
   STable* pTable = tsdbGetTableByUid(tsdbGetMeta(tsdb), uid);
-  if (pTable == NULL) {
+  if (pTable == NULL || TABLE_TID(pTable) != tid) {
     terrno = TSDB_CODE_TDB_INVALID_TABLE_ID;
     tsdbUnlockRepoMeta(tsdb);
     goto _error;
