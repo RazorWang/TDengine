@@ -355,7 +355,7 @@ SArray *tsdbRetrieveDataBlock(TsdbQueryHandleT *pQueryHandle, SArray *pColumnIdL
  * @param stableid. super table sid
  * @param pTagCond. tag query condition
  */
-int32_t tsdbQuerySTableByTagCond(STsdbRepo *tsdb, uint64_t uid, TSKEY key, const char *pTagCond, size_t len,
+int32_t tsdbQuerySTableByTagCond(STsdbRepo *tsdb, uint64_t uid, int32_t tid, TSKEY key, const char *pTagCond, size_t len,
                                  STableGroupInfo *pGroupList, SColIndex *pColIndex, int32_t numOfCols);
 
 /**
@@ -369,10 +369,11 @@ void tsdbDestroyTableGroup(STableGroupInfo *pGroupList);
  *
  * @param tsdb        tsdbHandle
  * @param uid         table uid
+ * @param tid         table tid
  * @param pGroupInfo  the generated result
  * @return
  */
-int32_t tsdbGetOneTableGroup(STsdbRepo *tsdb, uint64_t uid, TSKEY startKey, STableGroupInfo *pGroupInfo);
+int32_t tsdbGetOneTableGroup(STsdbRepo *tsdb, uint64_t uid, int32_t tid, TSKEY startKey, STableGroupInfo *pGroupInfo);
 
 /**
  *
